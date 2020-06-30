@@ -9,32 +9,35 @@ import UIKit
 
 // Extend Interface Builder to expose view border parameters.
 @IBDesignable extension UIView {
+
     @IBInspectable var borderColor: UIColor? {
-        set {
-            layer.borderColor = newValue?.cgColor
-        }
         get {
             guard let color = layer.borderColor else {
                 return nil
             }
             return UIColor(cgColor: color)
         }
-    }
-    @IBInspectable var borderWidth: CGFloat {
         set {
-            layer.borderWidth = newValue
+            layer.borderColor = newValue?.cgColor
         }
+    }
+
+    @IBInspectable var borderWidth: CGFloat {
         get {
             return layer.borderWidth
         }
+        set {
+            layer.borderWidth = newValue
+        }
     }
+
     @IBInspectable var cornerRadius: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
         set {
             layer.cornerRadius = newValue
             clipsToBounds = newValue > 0
-        }
-        get {
-            return layer.cornerRadius
         }
     }
 }

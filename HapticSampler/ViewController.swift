@@ -53,11 +53,20 @@ class ViewController: UIViewController {
         engine.stoppedHandler = { reason in
             print("The engine stopped for reason: \(reason.rawValue)")
             switch reason {
-            case .audioSessionInterrupt: print("Audio session interrupt")
-            case .applicationSuspended: print("Application suspended")
-            case .idleTimeout: print("Idle timeout")
-            case .systemError: print("System error")
-            case .notifyWhenFinished: print("Playback finished")
+            case .audioSessionInterrupt:
+                print("Audio session interrupt")
+            case .applicationSuspended:
+                print("Application suspended")
+            case .idleTimeout:
+                print("Idle timeout")
+            case .systemError:
+                print("System error")
+            case .notifyWhenFinished:
+                print("Playback finished")
+            case .gameControllerDisconnect:
+                print("Controller disconnected.")
+            case .engineDestroyed:
+                print("Engine destroyed.")
             @unknown default:
                 print("Unknown error")
             }

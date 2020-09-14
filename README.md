@@ -21,7 +21,10 @@ HapticSampler checks for device compatibility and sets up an instance of [`CHHap
 ``` swift
 // Create and configure a haptic engine.
 do {
-    engine = try CHHapticEngine()
+    // Associate the haptic engine with the default audio session
+    // to ensure the correct behavior when playing audio-based haptics.
+    let audioSession = AVAudioSession.sharedInstance()
+    engine = try CHHapticEngine(audioSession: audioSession)
 } catch let error {
     print("Engine Creation Error: \(error)")
 }

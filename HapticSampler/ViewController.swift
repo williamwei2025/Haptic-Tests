@@ -7,6 +7,7 @@ The view controller for the HapticSampler app.
 
 import UIKit
 import CoreHaptics
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -40,7 +41,10 @@ class ViewController: UIViewController {
     func createEngine() {
         // Create and configure a haptic engine.
         do {
-            engine = try CHHapticEngine()
+            // Associate the haptic engine with the default audio session
+            // to ensure the correct behavior when playing audio-based haptics.
+            let audioSession = AVAudioSession.sharedInstance()
+            engine = try CHHapticEngine(audioSession: audioSession)
         } catch let error {
             print("Engine Creation Error: \(error)")
         }

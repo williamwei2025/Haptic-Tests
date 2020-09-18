@@ -12,7 +12,7 @@ import AVFoundation
 class ViewController: UIViewController {
     
     // A haptic engine manages the connection to the haptic server.
-    var engine: CHHapticEngine!
+    var engine: CHHapticEngine?
     
     // Maintain a variable to check for Core Haptics compatibility on device.
     lazy var supportsHaptics: Bool = {
@@ -49,8 +49,9 @@ class ViewController: UIViewController {
             print("Engine Creation Error: \(error)")
         }
         
-        if engine == nil {
+        guard let engine = engine else {
             print("Failed to create engine!")
+            return
         }
         
         // The stopped handler alerts you of engine stoppage due to external causes.
@@ -81,7 +82,7 @@ class ViewController: UIViewController {
             // Try restarting the engine.
             print("The engine reset --> Restarting now!")
             do {
-                try self.engine.start()
+                try self.engine?.start()
             } catch {
                 print("Failed to restart the engine: \(error)")
             }
@@ -103,10 +104,10 @@ class ViewController: UIViewController {
         
         do {
             // Start the engine in case it's idle.
-            try engine.start()
+            try engine?.start()
             
             // Tell the engine to play a pattern.
-            try engine.playPattern(from: URL(fileURLWithPath: path))
+            try engine?.playPattern(from: URL(fileURLWithPath: path))
             
         } catch { // Engine startup errors
             print("An error occured playing \(filename): \(error).")

@@ -60,7 +60,7 @@ try engine?.playPattern(from: URL(fileURLWithPath: path))
 ```
 [View in Source](x-source-tag://PlayAHAP)      
 
-This method of playback follows a *fire & forget* model; each haptic pattern plays until it reaches its end, then stops automatically.
+This method of playback follows a *fire and forget* model; each haptic pattern plays until it reaches its end, then stops automatically.
 
 Once the haptic starts playing, you can't stop it, and pressing other buttons layers those haptics on top of any existing haptic patterns in the middle of playback. This layering allows you to combine a haptic pattern with a more continuous intent, like the rumble of thunder, with a more impulse-driven haptic pattern built from transient taps, like the strike of lightning.
 
@@ -73,8 +73,8 @@ Core Haptics layers simultaneously playing haptics automatically. If you don't w
 To have more granular control over individual haptics, such as configuring their pausing, resuming, and seeking behavior, create and maintain advanced pattern players using [`CHAdvancedPatternPlayer`](https://developer.apple.com/documentation/corehaptics/chhapticadvancedpatternplayer) instead of using [`playPattern`](https://developer.apple.com/documentation/corehaptics/chhapticengine/3043659-playpattern).
 
 ``` swift
-self.advancedPlayer = try! self.hapticEngine.createAdvancedPlayer(with:ahapPattern!)
-self.advancedPlayer?.loopEnabled = true
+advancedPlayer = try hapticEngine.makeAdvancedPlayer(with: ahapPattern)
+advancedPlayer.loopEnabled = true
 ```
 
 ## Compose Your Own Haptic

@@ -113,6 +113,59 @@ class ViewController: UIViewController {
             print("An error occured playing \(filename): \(error).")
         }
     }
+    
+    func playHaptics(x: Float, y: Float)
+    {
+        if !supportsHaptics {
+            return
+        }
+        
+        // Create an intensity parameter:
+        let intensityD = CHHapticDynamicParameter(parameterID: .hapticIntensityControl,
+                                               value: 1.0,relativeTime: 0)
+
+        // Create a sharpness parameter:
+        let sharpnessD = CHHapticDynamicParameter(parameterID: .hapticSharpnessControl,
+                                               value: 1.0, relativeTime: 0)
+        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity,
+                                               value: 1.0)
+
+        // Create a sharpness parameter:
+        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness,
+                                               value: 1.0)
+
+        // Create a continuous event with a long duration from the parameters.
+        let continuousEvent = CHHapticEvent(eventType: .hapticContinuous,
+                                            parameters: [intensity, sharpness],
+                                            relativeTime: 0,
+                                            duration: 100)
+
+        do {
+            // Create a pattern from the continuous haptic event.
+            let pattern = try CHHapticPattern(events: [continuousEvent], parameters: [])
+            
+            // Start the engine in case it's idle.
+            try engine?.start()
+            let continuousPlayer = try engine?.makeAdvancedPlayer(with: pattern)
+            
+            for index in 1...1000 {
+                do{
+                    try
+                    continuousPlayer?.sendParameters([intensityD,sharpnessD], atTime: 0)
+                    usleep(100)
+                    
+                }catch let error{
+                    print("\(error)")
+                }
+            }
+            // Tell the engine to play a pattern.
+            
+            
+            
+        } catch { // Engine startup errors
+                print("An error occured x")
+            }
+    }
 
     @IBAction func buttonBackgroundRegular(_ sender: UIButton) {
         sender.backgroundColor = #colorLiteral(red: 0.937, green: 0.937, blue: 0.937, alpha: 1)
@@ -124,7 +177,12 @@ class ViewController: UIViewController {
     
     // Respond to presses from each button, created in Interface Builder.
     @IBAction func playAHAP1(sender: UIButton) {
-        playHapticsFile(named: "AHAP/Sparkle")
+        //playHapticsFile(named: "AHAP/Sparkle")
+        
+        playHaptics(x: 1, y:0)
+//
+        
+        print("done")
     }
     
     @IBAction func playAHAP2(sender: UIButton) {

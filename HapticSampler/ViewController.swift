@@ -122,11 +122,11 @@ class ViewController: UIViewController {
         
         // Create an intensity parameter:
         let intensityD = CHHapticDynamicParameter(parameterID: .hapticIntensityControl,
-                                               value: 1.0,relativeTime: 0)
+                                               value: x,relativeTime: 0)
 
         // Create a sharpness parameter:
         let sharpnessD = CHHapticDynamicParameter(parameterID: .hapticSharpnessControl,
-                                               value: 1.0, relativeTime: 0)
+                                               value: y, relativeTime: 0)
         let intensity = CHHapticEventParameter(parameterID: .hapticIntensity,
                                                value: 1.0)
 
@@ -148,16 +148,17 @@ class ViewController: UIViewController {
             try engine?.start()
             let continuousPlayer = try engine?.makeAdvancedPlayer(with: pattern)
             
-            for index in 1...1000 {
-                do{
-                    try
-                    continuousPlayer?.sendParameters([intensityD,sharpnessD], atTime: 0)
-                    usleep(100)
+            
+            //// call it 100 times and at the end of the loop, sleep for 1 milli sec, swap between 0 and 1
+            do{
+                try continuousPlayer?.sendParameters([intensityD,sharpnessD], atTime: 0)
+                
+                   
                     
                 }catch let error{
                     print("\(error)")
                 }
-            }
+            
             // Tell the engine to play a pattern.
             
             
@@ -178,8 +179,22 @@ class ViewController: UIViewController {
     // Respond to presses from each button, created in Interface Builder.
     @IBAction func playAHAP1(sender: UIButton) {
         //playHapticsFile(named: "AHAP/Sparkle")
+        var temp_x = 0.0
+        var temp_y = 0.0
+        for i in 0..<100 {
+            if i % 2 == 0 {
+                temp_x = 1.0
+                temp_y = 0.0
+            }
+            else {
+                temp_x = 0.0
+                temp_y = 1.0
+            }
+            playHaptics(x: temp_x, y:temp_y)
+            Thread.sleep(forTimeInterval: 0.001)
+        }
         
-        playHaptics(x: 1, y:0)
+    
 //
         
         print("done")

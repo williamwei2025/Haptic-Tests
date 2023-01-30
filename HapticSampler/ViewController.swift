@@ -178,26 +178,8 @@ class ViewController: UIViewController {
     
     // Respond to presses from each button, created in Interface Builder.
     @IBAction func playAHAP1(sender: UIButton) {
-        //playHapticsFile(named: "AHAP/Sparkle")
-        var temp_x = 0.0
-        var temp_y = 0.0
-        for i in 0..<100 {
-            if i % 2 == 0 {
-                temp_x = 1.0
-                temp_y = 0.0
-            }
-            else {
-                temp_x = 0.0
-                temp_y = 1.0
-            }
-            playHaptics(x: temp_x, y:temp_y)
-            Thread.sleep(forTimeInterval: 0.001)
-        }
-        
-    
-//
-        
-        print("done")
+        playHapticsFile(named: "AHAP/Sparkle")
+
     }
     
     @IBAction func playAHAP2(sender: UIButton) {

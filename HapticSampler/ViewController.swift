@@ -114,57 +114,59 @@ class ViewController: UIViewController {
         }
     }
     
-    func playHaptics(x: Float, y: Float)
-    {
+    private func playHapticTransient(time: TimeInterval,
+                                     intensity: Float,
+                                     sharpness: Float,
+                                     frequency: Int) {
+        
+        // Abort if the device doesn't support haptics.
         if !supportsHaptics {
             return
         }
         
-        // Create an intensity parameter:
-        let intensityD = CHHapticDynamicParameter(parameterID: .hapticIntensityControl,
-                                               value: 1.0,relativeTime: 0)
-
-        // Create a sharpness parameter:
-        let sharpnessD = CHHapticDynamicParameter(parameterID: .hapticSharpnessControl,
-                                               value: 1.0, relativeTime: 0)
-        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity,
-                                               value: 1.0)
-
-        // Create a sharpness parameter:
-        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness,
-                                               value: 1.0)
-
-        // Create a continuous event with a long duration from the parameters.
-        let continuousEvent = CHHapticEvent(eventType: .hapticContinuous,
-                                            parameters: [intensity, sharpness],
-                                            relativeTime: 0,
-                                            duration: 100)
-
+        // Flash the pad background to indicate that the timer fired.
+        //self.flashBackground(in: self.transientPalette)
+        
+        // Create an event (static) parameter to represent the haptic's intensity.
+        let intensityParameter = CHHapticEventParameter(parameterID: .hapticIntensity,
+                                                        value: intensity)
+        
+        // Create an event (static) parameter to represent the haptic's sharpness.
+        let sharpnessParameter = CHHapticEventParameter(parameterID: .hapticSharpness,
+                                                        value: sharpness)
+        
+        
+        var events : [CHHapticEvent] = []
+        
+        var freq = 1.0 / Double(frequency)
+        for i in 0..<frequency
+        {
+            events.append( CHHapticEvent(eventType: .hapticTransient,
+                                         parameters: [intensityParameter, sharpnessParameter],
+                                         relativeTime: Double(i)*freq))
+        }
+        
+        // Create an event to represent the transient haptic pattern.
+        
+        
+//        let event = CHHapticEvent(eventType: .hapticTransient,
+//                                  parameters: [intensityParameter, sharpnessParameter],
+//                                  relativeTime: 0)
+        
+        // Create a pattern from the haptic event.
         do {
-            // Create a pattern from the continuous haptic event.
-            let pattern = try CHHapticPattern(events: [continuousEvent], parameters: [])
             
             // Start the engine in case it's idle.
             try engine?.start()
-            let continuousPlayer = try engine?.makeAdvancedPlayer(with: pattern)
             
-            for index in 1...1000 {
-                do{
-                    try
-                    continuousPlayer?.sendParameters([intensityD,sharpnessD], atTime: 0)
-                    usleep(100)
-                    
-                }catch let error{
-                    print("\(error)")
-                }
-            }
-            // Tell the engine to play a pattern.
+            let pattern = try CHHapticPattern(events: events, parameters: [])
             
-            
-            
-        } catch { // Engine startup errors
-                print("An error occured x")
-            }
+            // Create a player to play the haptic pattern.
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: CHHapticTimeImmediate) // Play now.
+        } catch let error {
+            print("Error creating a haptic transient pattern: \(error)")
+        }
     }
 
     @IBAction func buttonBackgroundRegular(_ sender: UIButton) {
@@ -177,16 +179,14 @@ class ViewController: UIViewController {
     
     // Respond to presses from each button, created in Interface Builder.
     @IBAction func playAHAP1(sender: UIButton) {
-        //playHapticsFile(named: "AHAP/Sparkle")
+        playHapticsFile(named: "AHAP/Sparkle")
         
-        playHaptics(x: 1, y:0)
-//
-        
-        print("done")
+
     }
     
     @IBAction func playAHAP2(sender: UIButton) {
-        playHapticsFile(named: "AHAP/Heartbeats")
+        //playHapticsFile(named: "AHAP/Heartbeats")
+        playHapticTransient(time: 0, intensity: 1, sharpness: 0.5, frequency: 50)
     }
     
     @IBAction func playAHAP3(sender: UIButton) {
@@ -194,7 +194,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func playAHAP4(sender: UIButton) {
-        playHapticsFile(named: "AHAP/Inflate")
+        //playHapticsFile(named: "AHAP/Inflate")
+        playHapticTransient(time: 0, intensity: 1, sharpness: 0.5, frequency: 100)
     }
     
     @IBAction func playAHAP5(sender: UIButton) {
@@ -202,7 +203,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func playAHAP6(sender: UIButton) {
-         playHapticsFile(named: "AHAP/Rumble")
+        //playHapticsFile(named: "AHAP/Rumble")
+        playHapticTransient(time: 0, intensity: 1, sharpness: 0.5, frequency: 250)
     }
     
     @IBAction func playAHAP7(sender: UIButton) {
@@ -210,7 +212,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func playAHAP8(sender: UIButton) {
-         playHapticsFile(named: "AHAP/Drums")
+        //playHapticsFile(named: "AHAP/Drums")
+        playHapticTransient(time: 0, intensity: 1, sharpness: 0.5, frequency: 500)
     }
 
 }

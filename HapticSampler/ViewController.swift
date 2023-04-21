@@ -44,7 +44,9 @@ class ViewController: UIViewController {
             // Associate the haptic engine with the default audio session
             // to ensure the correct behavior when playing audio-based haptics.
             let audioSession = AVAudioSession.sharedInstance()
+            print(audioSession)
             engine = try CHHapticEngine(audioSession: audioSession)
+            print(engine)
         } catch let error {
             print("Engine Creation Error: \(error)")
         }
@@ -106,11 +108,32 @@ class ViewController: UIViewController {
             // Start the engine in case it's idle.
             try engine?.start()
             
+            print("a hi")
             // Tell the engine to play a pattern.
             try engine?.playPattern(from: URL(fileURLWithPath: path))
             
         } catch { // Engine startup errors
             print("An error occured playing \(filename): \(error).")
+        }
+    }
+    
+    func playWavFile(filename: String) {
+        // Ensure the file exists
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "wav") else {
+            print("File not found: \(filename).wav")
+            return
+        }
+
+        do {
+            // Create an AVAudioPlayer instance with the file URL
+            let audioPlayer = try AVAudioPlayer(contentsOf: url)
+            print("w hi")
+
+            // Play the audio file
+            audioPlayer.prepareToPlay()
+            audioPlayer.play()
+        } catch let error {
+            print("Error playing WAV file: \(error.localizedDescription)")
         }
     }
     
@@ -185,6 +208,7 @@ class ViewController: UIViewController {
     @IBAction func playAHAP1(sender: UIButton) {
         //playHapticsFile(named: "AHAP/Inflate")
         playHapticsFile(named: "AHAP/Heartbeats")
+        playWavFile(filename: "AHAP/accelSilk 1")
 
     }
     
